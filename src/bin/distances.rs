@@ -8,6 +8,9 @@ use std::{fs::File, io::BufReader, path::PathBuf};
 struct Args {
     #[clap(short, long, default_value = "berlin_infos.dat", parse(from_os_str))]
     input: PathBuf,
+
+    #[clap(short, long, default_value = "berlin_infos.out", parse(from_os_str))]
+    output: PathBuf,
 }
 
 fn main() -> Result<()> {
@@ -17,10 +20,7 @@ fn main() -> Result<()> {
     let reader = BufReader::new(f);
     let mut rdr = deser_with_windows_encoding(reader);
 
-    let vec = rdr
-        .deserialize::<Record>()
-        .collect::<Result<Vec<_>, _>>()
-        .context("Failed to deserialize")?;
-    assert_eq!(vec.len(), 384860);
+    let mut vec = rdr.deserialize::<Record>().collect::<Vec<_>>();
+    vec.truncate(10);
     Ok(())
 }
