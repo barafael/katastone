@@ -1,13 +1,36 @@
-use thousands::Separable;
-
 /// Safety: call only with strings containing float literals
 pub unsafe fn germanize_float(formatted: &mut String) {
-    formatted.as_bytes_mut().iter_mut().for_each(|s| {
-        if *s == b'.' {
-            *s = b','
+    let mut replaced = formatted.replace('.', ",");
+
+    let bytes = replaced.as_bytes_mut();
+    bytes.reverse();
+
+    let mut seen_comma = false;
+    let mut counter = 0;
+    let mut result = String::with_capacity(bytes.len());
+    for i in bytes.iter() {
+        result.push(*i as char);
+
+        if !seen_comma {
+            if *i == b',' {
+                seen_comma = true;
+            }
+            continue;
         }
-    });
-    *formatted = formatted.separate_with_dots();
+        if counter == 2 {
+            counter = 0;
+            result.push('.');
+        } else {
+            counter += 1;
+        }
+    }
+    // pop leading dot
+    if result.ends_with('.') {
+        result.pop();
+    }
+    let bytes = result.as_bytes_mut();
+    bytes.reverse();
+    *formatted = result
 }
 
 #[repr(transparent)]
@@ -31,13 +54,6 @@ mod test {
     fn formats_float() {
         let f = DeFloat(1.234);
         assert_eq!(format!("{f}"), "1.234");
-    }
-
-    #[test]
-    fn formats() -> anyhow::Result<()> {
-        use thousands::Separable;
-        assert_eq!(15575737.683345.separate_with_dots(), "15.575.737.683345");
-        Ok(())
     }
 
     #[test]

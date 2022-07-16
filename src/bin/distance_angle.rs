@@ -1,7 +1,7 @@
 use anyhow::Result;
 use clap::StructOpt;
 use clap_derive::Parser;
-use encoding_rs::WINDOWS_1252;
+use encoding_rs::{EncoderResult, WINDOWS_1252};
 use katastone::{
     consts::{FERNSEH_LAMBDA_RAD, FERNSEH_PHI_RAD},
     util::{vec_from_reader, windows_encoding_deserializer},
@@ -55,11 +55,14 @@ fn main() -> Result<()> {
     let mut encoder = WINDOWS_1252.new_encoder();
     let mut line = Vec::with_capacity(256);
     for r in vec {
-        let (a, b) = encoder.encode_from_utf8_to_vec_without_replacement(
+        let (a, _b) = encoder.encode_from_utf8_to_vec_without_replacement(
             &format!("{r}\n"),
             &mut line,
             false,
         );
+        if !matches!(a, EncoderResult::InputEmpty) {
+            eprintln!("Encoder encountered: {a:?}");
+        }
         writer.write_all(&line).unwrap();
         line.clear();
     }
