@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use std::{cmp::Ordering, fmt::Display};
 
+use crate::de_float::germanize_float;
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Record {
     /// Stadt
@@ -41,11 +43,16 @@ pub struct Record {
 
 impl Display for Record {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let district = format!("{},", self.district);
+        let city_id = format!("{} - {}, ", self.city, self.district);
+        let street_and_number = format!("{} {}", self.street, self.street_number);
+        let mut distance = format!("{:.3}", self.distance);
+        unsafe { germanize_float(&mut distance) };
+        let mut angle = format!("{:.3}", self.angle);
+        unsafe { germanize_float(&mut angle) };
         write!(
             f,
-            "{} {} - {district:75}{} {} = {}m / {}°",
-            self.zipcode, self.city, self.street, self.street_number, self.distance, self.angle
+            "{} {city_id:75}{street_and_number:65}={distance:>15}m / {angle:>7}°",
+            self.zipcode,
         )
     }
 }
@@ -132,13 +139,12 @@ mod test {
             district: "Mitte".into(),
             latitude: 52.5207635,
             longitude: 13.4098665,
-            distance: 0.0,
-            angle: 0.0,
+            distance: 12345.54321,
+            angle: 65432.23456,
         };
-        let str = format!("{}", record);
         assert_eq!(
-            str,
-            r#"10178 Berlin - Mitte,                                                                     Gontardstrasse 9 = 0m / 0°"#
+            format!("{record}"),
+            r#"10178 Berlin - Mitte,                                                            Gontardstrasse 9                                                 =     12.345,543m / 65.432,235°"#,
         );
 
         Ok(())
