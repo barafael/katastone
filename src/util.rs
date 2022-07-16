@@ -5,7 +5,7 @@ use encoding_rs_io::{DecodeReaderBytes, DecodeReaderBytesBuilder};
 
 use crate::record::Record;
 
-pub fn deser_with_windows_encoding<R>(reader: R) -> Reader<DecodeReaderBytes<R, Vec<u8>>>
+pub fn windows_encoding_deserializer<R>(reader: R) -> Reader<DecodeReaderBytes<R, Vec<u8>>>
 where
     R: std::io::Read,
 {

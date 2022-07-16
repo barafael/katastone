@@ -1,4 +1,7 @@
 /target
 /Cargo.lock
-berlin_infos.dat
-berlin_spots.txt
+input/
+output/
+desired_output/
+spec.pdf
+tarpaulin-report.html

@@ -3,10 +3,6 @@ name = "katastone"
 version = "0.1.0"
 edition = "2021"
 
-[[bin]]
-name = "deserialize"
-path = "src/bin/deserialize.rs"
-
 [dependencies]
 anyhow = "1.0.58"
 clap = "3.2.8"
@@ -15,4 +11,6 @@ csv = "1.1.6"
 # TODO play with SIMD options
 encoding_rs = { version = "0.8.31", features = ["serde"] }
 encoding_rs_io = "0.1.7"
+ryu = "1.0.10"
 serde = { version = "1", features = ["derive"] }
+thousands = "0.2.0"

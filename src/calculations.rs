@@ -110,7 +110,29 @@ mod test {
     }
 
     #[test]
-    fn sets_record() -> anyhow::Result<()> {
+    fn sets_gontardstraße_9() {
+        let latitude = 52.5207635f64;
+        let longitude = 13.4098665f64;
+        let mut record = Record {
+            city: "Berlin".into(),
+            street: "Gontard".into(),
+            street_number: "9".into(),
+            zipcode: "12456".into(),
+            urban_unit: "unit".into(),
+            old_unit: "unit".into(),
+            district: "district".into(),
+            latitude,
+            longitude,
+            distance: 0.0,
+            angle: 0.0,
+        };
+        record.set_angle_direction(FERNSEH_PHI_RAD, FERNSEH_LAMBDA_RAD);
+        assert_eq!(record.distance as u64, 28);
+        assert_eq!(record.angle as u64, 98);
+    }
+
+    #[test]
+    fn sets_karl_liebknecht() -> anyhow::Result<()> {
         let entry =
             "Berlin;Karl-Liebknecht-Stra�e;15;10178;Mitte;Mitte;Mitte;52.5229655;13.4099882";
         let mut reader = build_reader(entry.as_bytes());
