@@ -23,7 +23,10 @@ impl Record {
 
 #[inline]
 fn zeta(phi_a: f64, phi_b: f64, lambda_a: f64, lambda_b: f64) -> f64 {
-    f64::acos(phi_a.sin() * phi_b.sin() + phi_a.cos() * phi_b.cos() * f64::cos(lambda_b - lambda_a))
+    f64::acos(phi_a.sin().mul_add(
+        phi_b.sin(),
+        phi_a.cos() * phi_b.cos() * f64::cos(lambda_b - lambda_a),
+    ))
 }
 
 #[inline]

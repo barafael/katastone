@@ -30,7 +30,7 @@ pub unsafe fn germanize_float(formatted: &mut String) {
     }
     let bytes = result.as_bytes_mut();
     bytes.reverse();
-    *formatted = result
+    *formatted = result;
 }
 
 #[repr(transparent)]
