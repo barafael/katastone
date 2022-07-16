@@ -1,14 +1,12 @@
 use thousands::Separable;
 
 /// Safety: call only with strings containing float literals
-pub fn germanize_float(formatted: &mut String) {
-    unsafe {
-        formatted.as_bytes_mut().iter_mut().for_each(|s| {
-            if *s == b'.' {
-                *s = b','
-            }
-        });
-    }
+pub unsafe fn germanize_float(formatted: &mut String) {
+    formatted.as_bytes_mut().iter_mut().for_each(|s| {
+        if *s == b'.' {
+            *s = b','
+        }
+    });
     *formatted = formatted.separate_with_dots();
 }
 
@@ -46,7 +44,7 @@ mod test {
     fn germanizes() {
         let f = 134563435.34534523f64;
         let mut formatted = format!("{f}");
-        germanize_float(&mut formatted);
-        dbg!(formatted);
+        unsafe { germanize_float(&mut formatted) };
+        assert_eq!(formatted, "134.563.435,34534523");
     }
 }
