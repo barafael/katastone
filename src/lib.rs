@@ -3,3 +3,4 @@ pub mod consts;
 mod de_float;
 pub mod record;
 pub mod util;
+mod din5007;

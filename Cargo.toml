@@ -11,8 +11,12 @@ csv = "1.1.6"
 # TODO play with SIMD options
 encoding_rs = { version = "0.8.31", features = ["serde"] }
 encoding_rs_io = "0.1.7"
+memchr = "2.5.0"
+rayon = "1.5.3"
 ryu = "1.0.10"
 serde = { version = "1", features = ["derive"] }
 
 [profile.release]
 debug = true
+lto = true
+codegen-units = 1
